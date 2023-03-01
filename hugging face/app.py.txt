@@ -1,0 +1,21 @@
+import gradio as gr
+from gpt_index import GPTSimpleVectorIndex
+from gpt_index.langchain_helpers.chain_wrapper import OpenAI
+import os
+
+os.environ["OPENAI_API_KEY"] = "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"
+index = GPTSimpleVectorIndex.load_from_disk('./index (4).json')
+
+def my_model_function(input_text):
+    response = index.query(input_text, response_mode="compact")
+    return response
+
+iface = gr.Interface(
+    fn=my_model_function, 
+    inputs=gr.inputs.Textbox(label="Enter your question here"),
+    outputs="text",
+    title="GPT Index Demo",
+    description="Type a question and see the matching responses from the index!"
+)
+
+iface.launch()
